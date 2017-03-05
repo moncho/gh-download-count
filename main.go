@@ -10,6 +10,7 @@ import (
 	"github.com/moncho/gh-download-count/output"
 )
 
+var quiet = flag.Bool("quiet", false, "shows just the download count")
 var detail = flag.Bool("detail", false, "shows download count per release")
 var json = flag.Bool("json", false, "generates a json with the download count")
 
@@ -18,7 +19,7 @@ func main() {
 	args := flag.Args()
 
 	if len(args) == 0 || len(args) > 2 {
-		fmt.Printf("Got %d args, was expecting 1 or 2.", len(args))
+		fmt.Printf("Got %d args, was expecting \"owner/repo\".\n", len(args))
 		return
 	}
 
@@ -34,6 +35,8 @@ func main() {
 		w = output.ASCIITableWriter{}
 	} else if *json {
 		w = output.JSONWriter{}
+	} else if *quiet {
+		w = output.QuietWriter{}
 	} else {
 		w = output.DefaultProjectWriter{}
 	}
